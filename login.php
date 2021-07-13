@@ -13,7 +13,7 @@ if ( isset($_POST['cancel'] ) ) {
     return;
 }
 
-$salt = 'XyZzy12*_';
+$salt = 'useyourownsalthere.xyzzz.sample';
       // sample Pw is php123 and we add salt to strengthen it
       // stored hash is the concatenated of $salt.$stored_hash
 
