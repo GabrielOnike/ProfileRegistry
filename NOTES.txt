@@ -1,0 +1,97 @@
+THIS APLICATION IS RUN VIA THE LOCAL HOST and can be assessed by using the following commands below on an SQL database
+
+To get started run the following SQL commands:
+
+CREATE DATABASE misc;
+GRANT ALL ON misc.* TO 'gabe'@'localhost' IDENTIFIED BY 'gab';
+GRANT ALL ON misc.* TO 'gabe'@'127.0.0.1' IDENTIFIED BY 'gab';
+
+USE misc; (Or select misc in phpMyAdmin)
+
+CREATE TABLE users (
+   user_id INTEGER NOT NULL
+     AUTO_INCREMENT KEY,
+   name VARCHAR(128),
+   email VARCHAR(128),
+   password VARCHAR(128),
+   INDEX(email)
+) ENGINE=InnoDB CHARSET=utf8;
+
+You will need to have a users table as follows:
+
+CREATE TABLE users (
+   user_id INTEGER NOT NULL AUTO_INCREMENT,
+   name VARCHAR(128),
+   email VARCHAR(128),
+   password VARCHAR(128),
+   PRIMARY KEY(user_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE users ADD INDEX(email);
+ALTER TABLE users ADD INDEX(password);
+
+You will also need to add a Profile table as follows:
+CREATE TABLE Profile (
+  profile_id INTEGER NOT NULL AUTO_INCREMENT,
+  user_id INTEGER NOT NULL,
+  first_name TEXT,
+  last_name TEXT,
+  email TEXT,
+  headline TEXT,
+  summary TEXT,
+
+  PRIMARY KEY(profile_id),
+
+
+  CONSTRAINT profile_ibfk_2
+        FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE Position (
+position_id INTEGER NOT NULL AUTO_INCREMENT,
+profile_id INTEGER,
+rank INTEGER,
+year INTEGER,
+description TEXT,
+
+PRIMARY KEY(position_id),
+
+  CONSTRAINT position_ibfk_1
+        FOREIGN KEY (profile_id)
+        REFERENCES Profile (profile_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+MORE TABLES
+You must create the Institution table first so that the CONSTRAINTS in the Education table work properly.
+
+
+CREATE TABLE Institution (
+  institution_id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  PRIMARY KEY(institution_id),
+  UNIQUE(name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE Education (
+  profile_id INTEGER,
+  institution_id INTEGER,
+  rank INTEGER,
+  year INTEGER,
+
+  CONSTRAINT education_ibfk_1
+        FOREIGN KEY (profile_id)
+        REFERENCES Profile (profile_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT education_ibfk_2
+        FOREIGN KEY (institution_id)
+        REFERENCES Institution (institution_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+  PRIMARY KEY(profile_id, institution_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
